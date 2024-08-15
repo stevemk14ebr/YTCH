@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap">
+    <title>YTCH</title>
+    <meta name="description" content="Watch Youtube Channels">
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+</head>
+
+<body>
+    <div id="player"></div>
+    <div class="static-noise"></div>
+    <div class="power-screen"></div>
+    <div class="smpte">
+        <div class="bar bar-1"></div>
+        <div class="bar bar-2"></div>
+        <div class="bar bar-3"></div>
+        <div class="bar bar-4"></div>
+        <div class="bar bar-5"></div>
+        <div class="bar bar-6"></div>
+        <div class="bar bar-7"></div>
+    </div>
+    <div class="control">
+        <div class="wrapper">
+            <div class="button power min" onclick="togglePower()"><img src="icons/power.svg"></div>
+            <div class="button minimize" onclick="toggleControl()"><img src="icons/minimize-2.svg"></div>
+        </div>
+        <div class="wrapper min">
+            <div class="left-buttons">
+                <div class="button" onclick="toggleMute()"><img src="icons/volume-x.svg" class="muteIcon"></div>
+                <div class="button" onclick="toggleInfo()"><img src="icons/info.svg"></div>
+            </div>
+            <div class="right-buttons">
+                <div class="button" onclick="switchChannel(1)"><img src="icons/chevron-up.svg"></div>
+                <div class="button" onclick="switchChannel(-1)"><img src="icons/chevron-down.svg"></div>
+            </div>
+        </div>
+        <div class="wrapper min">
+            <div class="button video-id"></div>
+        </div>
+    </div>
+    <div class="channel-name"></div>
+</body>
+
+</html>
