@@ -44,7 +44,7 @@ function getList() {
             playChannel(channelNumber, false);
         }
     };
-    xhttp.open("GET", "list.json?t=" + Date.now());
+    xhttp.open("GET", "https://ytch.xyz/list.json?t=" + Date.now());
     xhttp.send();
 }
 
