@@ -10,6 +10,8 @@ let player, playingNow, playingNowOrder, startAt, vids;
 let channelNumber = 1;
 let isMin = false, isMuted = true, isOn = true, showInfo = false;
 
+let watchHistory = {};
+
 if (localStorage.getItem("storedChannelNumber") === null) {
     channelNumber = 1;
     localStorage.setItem("storedChannelNumber", 1);
@@ -26,6 +28,31 @@ control.addEventListener("mouseleave", function () {
         control.style.animation = "fadeout 3s forwards";
     }
 });
+
+function getChannelName(channel) {
+    let name = "...";
+    switch (channel) {
+        case 1: name = "Sci & Tech"; break;
+        case 2: name = "Travel"; break;
+        case 3: name = "Food"; break;
+        case 4: name = "Architecture"; break;
+        case 5: name = "Film"; break;
+        case 6: name = "Documentaries"; break;
+        case 7: name = "Comedy"; break;
+        case 8: name = "Music"; break;
+        case 9: name = "Autos"; break;
+        case 10: name = "News"; break;
+        case 11: name = "UFC"; break;
+        case 12: name = "Podcasts"; break;
+        case 13: name = "Gaming"; break;
+        case 14: name = "Literature"; break;
+        case 15: name = "Cooking"; break;
+        case 16: name = "Short Films"; break;
+        case 17: name = "Game Shows"; break;
+        case 18: name = "Cartoons"; break;
+    }
+    return name;
+}
 
 function resizePlayer() {
     let p = document.querySelector("#player");
@@ -49,7 +76,13 @@ function getList() {
 }
 
 function playChannel(ch, s) {
-    (ch < 10) ? channelName.textContent = "CH 0" + ch : channelName.textContent = "CH " + ch;
+    if (ch < 10) {
+        channelName.textContent = "CH 0" + ch;
+    } else {
+        channelName.textContent = "CH " + ch;
+    }
+    channelName.textContent += " - " + getChannelName(ch);
+
     control.style.display = "flex";
     smpte.style.opacity = 0;
     if (sync(ch)) {
@@ -77,14 +110,64 @@ function sync(ch) {
     return false;
 }
 
-var scriptUrl = 'https:\/\/www.youtube.com\/s\/player\/d2e656ee\/www-widgetapi.vflset\/www-widgetapi.js'; try { var ttPolicy = window.trustedTypes.createPolicy("youtube-widget-api", { createScriptURL: function (x) { return x } }); scriptUrl = ttPolicy.createScriptURL(scriptUrl) } catch (e) { } var YT; if (!window["YT"]) YT = { loading: 0, loaded: 0 }; var YTConfig; if (!window["YTConfig"]) YTConfig = { "host": "https://www.youtube.com" };
+var scriptUrl = 'https://www.youtube.com/s/player/d2e656ee/www-widgetapi.vflset/www-widgetapi.js';
+try {
+    var ttPolicy = window.trustedTypes.createPolicy('youtube-widget-api', {
+        createScriptURL: function (x) {
+            return x;
+        }
+    });
+    scriptUrl = ttPolicy.createScriptURL(scriptUrl);
+} catch (e) {
+}
+var YT;
+if (!window['YT'])
+    YT = {
+        loading: 0,
+        loaded: 0
+    };
+var YTConfig;
+if (!window['YTConfig'])
+    YTConfig = { 'host': 'https://www.youtube.com' };
 if (!YT.loading) {
-    YT.loading = 1; (function () {
-        var l = []; YT.ready = function (f) { if (YT.loaded) f(); else l.push(f) }; window.onYTReady = function () { YT.loaded = 1; var i = 0; for (; i < l.length; i++)try { l[i]() } catch (e) { } }; YT.setConfig = function (c) { var k; for (k in c) if (c.hasOwnProperty(k)) YTConfig[k] = c[k] }; var a = document.createElement("script"); a.type = "text/javascript"; a.id = "www-widgetapi-script"; a.src = scriptUrl; a.async = true; var c = document.currentScript; if (c) {
-            var n = c.nonce || c.getAttribute("nonce"); if (n) a.setAttribute("nonce",
-                n)
-        } var b = document.getElementsByTagName("script")[0]; b.parentNode.insertBefore(a, b)
-    })()
+    YT.loading = 1;
+    (function () {
+        var l = [];
+        YT.ready = function (f) {
+            if (YT.loaded)
+                f();
+            else
+                l.push(f);
+        };
+        window.onYTReady = function () {
+            YT.loaded = 1;
+            var i = 0;
+            for (; i < l.length; i++)
+                try {
+                    l[i]();
+                } catch (e) {
+                }
+        };
+        YT.setConfig = function (c) {
+            var k;
+            for (k in c)
+                if (c.hasOwnProperty(k))
+                    YTConfig[k] = c[k];
+        };
+        var a = document.createElement('script');
+        a.type = 'text/javascript';
+        a.id = 'www-widgetapi-script';
+        a.src = scriptUrl;
+        a.async = true;
+        var c = document.currentScript;
+        if (c) {
+            var n = c.nonce || c.getAttribute('nonce');
+            if (n)
+                a.setAttribute('nonce', n);
+        }
+        var b = document.getElementsByTagName('script')[0];
+        b.parentNode.insertBefore(a, b);
+    }());
 };
 
 function onYouTubeIframeAPIReady() {
@@ -151,6 +234,17 @@ function onPlayerStateChange(event) {
         }
         staticNoise.style.opacity = 0;
         videoId.textContent = playingNow;
+
+        videoData = player.getVideoData();
+        console.log(videoData);
+
+        if (!watchHistory[channelNumber]) {
+            watchHistory[channelNumber] = new Set([videoData.author]);
+        } else {
+            watchHistory[channelNumber].add(videoData.author);
+        }
+
+        document.getElementById("title").innerText = videoData.title + " BY " + videoData.author;
     } else if (event.data == 2) {
         videoId.textContent = "PAUSED";
     } else if (event.data == 3) {
