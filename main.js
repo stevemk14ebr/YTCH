@@ -239,11 +239,11 @@ function onPlayerStateChange(event) {
         console.log(videoData);
 
         if (!watchHistory[channelNumber]) {
-            watchHistory[channelNumber] = [videoData.author];
+            watchHistory[channelNumber] = new Set([videoData.author]);
         } else {
-            watchHistory[channelNumber].push(videoData.author);
+            watchHistory[channelNumber].add(videoData.author);
         }
-        console.log(watchHistory);
+
         document.getElementById("title").innerText = videoData.title + " BY " + videoData.author;
     } else if (event.data == 2) {
         videoId.textContent = "PAUSED";

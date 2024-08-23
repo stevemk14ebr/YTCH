@@ -360,7 +360,7 @@ body {
 
 .title {
     position: fixed;
-    bottom: 2rem;
+    top: 6rem;
     left: 2rem;
     color: #cdcfcd;
     text-transform: uppercase;
